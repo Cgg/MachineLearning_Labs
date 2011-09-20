@@ -1,3 +1,5 @@
+import random
+
 import monkdata as m
 
 import dtree as dT
@@ -40,3 +42,9 @@ def A31():
   tree = dT.buildTree( m.monk1, m.attributes, 5 )
   print tree
   draw.drawTree( tree )
+
+def partition( data, fraction ):
+  ldata = list( data )
+  random.shuffle( ldata )
+  breakPoint = int( len( data ) * fraction )
+  return ldata[:breakPoint], ldata[breakPoint:]
