@@ -7,14 +7,19 @@ from cvxopt.base import matrix
 import pylab, random, math
 import numpy as np
 
-def kernel( x, y, kind ): # x, y are vectors of ndarray type
-  if( x.size == 3 ):
-    # chop off the last element of x
-    x = x[ 1:2 ]
 
-  if( y.size == 3 ):
+# Implementations needed for the lab
+
+def kernel( x, y, kind ): # x, y are vectors of ndarray type
+  if x.size == 3:
+    # chop off the last element of x
+    x = x[ 0:2 ]
+    print(x)
+
+  if y.size == 3:
     # chop off the last element of y
-    y = y[ 1:2 ]
+    y = y[ 0:2 ]
+    print(y)
 
   if( kind == 0 ): # linear kernel function
     return ( np.dot( x, y ) + 1 )
@@ -23,8 +28,8 @@ def kernel( x, y, kind ): # x, y are vectors of ndarray type
 
 
 def testKer():
-  x = np.array( [1,2] )
-  y = np.array( [1,2] )
+  x = np.array( [1,2,-1] )
+  y = np.array( [1,2,1] )
 
   print( x )
   print( y )
