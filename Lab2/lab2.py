@@ -25,6 +25,23 @@ def kernel( x, y, kind ): # x, y are vectors of ndarray type
     print 'Not supported yet'
 
 
+def computePMatrix( dataset, kernelKind ):
+  # dataset is a list of points (ndarray type)
+  # kernel type tells us which kernel function we use (passed to kernel())
+
+  amountOfPoints = len( dataset )
+
+  P = np.zeros( ( amountOfPoints, amountOfPoints ) )
+
+  for i in range( amountOfPoints ):
+    for j in range( amountOfPoints ):
+      P[ i, j ] = dataset[ i ][ 2 ] * dataset[ j ][ 2 ] * kernel( dataset[ i ], dataset[ j ], kernelKind )
+
+  return P
+
+
+# Test for the above implementations
+
 def testKer():
   x = np.array( [1,2,-1] )
   y = np.array( [1,2,1] )
@@ -32,3 +49,15 @@ def testKer():
   print( x )
   print( y )
   print( kernel( x, y, 0 ) )
+
+def testMatP():
+  x = np.array( [1,2,-1] )
+  y = np.array( [1,2,1] )
+
+  print( x )
+  print( y )
+
+  L = [ x, y ]
+
+  print( L )
+  print( computePMatrix( L, 0 ) )
