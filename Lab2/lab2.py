@@ -14,12 +14,10 @@ def kernel( x, y, kind ): # x, y are vectors of ndarray type
   if x.size == 3:
     # chop off the last element of x
     x = x[ 0:2 ]
-    print(x)
 
   if y.size == 3:
     # chop off the last element of y
     y = y[ 0:2 ]
-    print(y)
 
   if( kind == 0 ): # linear kernel function
     return ( np.dot( x, y ) + 1 )
