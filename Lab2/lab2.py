@@ -40,6 +40,30 @@ def computePMatrix( dataset, kernelKind ):
   return P
 
 
+def callToQP( PMatrix ):
+  amountOfPoints = PMatrix.shape[0]
+
+  # first build helper matrixes to pass to qp
+  h = np.zeros( ( amountOfPoints, 1 ) )
+  q = np.zeros( ( amountOfPoints, 1 ) )
+  q[::] = -1
+
+  G = np.zeros( ( amountOfPoints, amountOfPoints ) )
+
+  for i in range( amountOfPoints ):
+    G[ i, i ] = -1
+
+  print( h )
+  print( q )
+  print( G )
+
+  # actual call to qp
+  r = qp( matrix(PMatrix), matrix(q), matrix(G), matrix(h) )
+  alpha = list( r['x'] )
+
+  return alpha
+
+
 # Test for the above implementations
 
 def testKer():
@@ -61,3 +85,13 @@ def testMatP():
 
   print( L )
   print( computePMatrix( L, 0 ) )
+
+def testCallQP():
+  x = np.array( [1,2,-1] )
+  y = np.array( [1,2,1] )
+  L = [ x, y ]
+  P = computePMatrix( L, 0 )
+
+  alpha = callToQP( P )
+
+  print( alpha )
