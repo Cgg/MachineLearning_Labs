@@ -8,7 +8,31 @@ import pylab, random, math
 import numpy as np
 
 
+# Building the hyper plan
+
+def Lab2( amountOfPoints, kernelKind ):
+
+  # generate dataset TODO
+  dataset = generateData()
+
+  P = computePMatrix( dataset, kernelKind )
+
+  alpha = callToQP( P )
+
+  # point initialization...
+
+  for i in range( len( alpha ) ):
+    if alpha[ i ] > 1e-5:
+      points[ i ] = Sample( alpha[ i ], dataset[ i ] )
+
+
 # Implementations needed for the lab
+
+class Sample:
+  def __init__( alpha, point ):
+    self.alpha = alpha
+    self.point = point
+
 
 def kernel( x, y, kind ): # x, y are vectors of ndarray type
   if x.size == 3:
@@ -62,6 +86,10 @@ def callToQP( PMatrix ):
   alpha = list( r['x'] )
 
   return alpha
+
+
+def generateData():
+  print 'todo'
 
 
 # Test for the above implementations
