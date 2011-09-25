@@ -115,10 +115,12 @@ def testMatP():
   print( computePMatrix( L, 0 ) )
 
 def testCallQP():
-  x = np.array( [1,2,-1] )
+  x = np.array( [11,32,-1] )
   y = np.array( [1,2,1] )
   L = [ x, y ]
   P = computePMatrix( L, 0 )
+
+  print( P )
 
   alpha = callToQP( P )
 
