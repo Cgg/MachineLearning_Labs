@@ -21,25 +21,27 @@ def Lab2( amountOfPoints, kernelKind ):
 
   # point initialization...
 
+  points=[]
+
   for i in range( len( alpha ) ):
     if alpha[ i ] > 1e-5:
-      points[ i ] = Sample( alpha[ i ], dataset[ i ] )
+      points.append( Sample( alpha[ i ], dataset[0][ i ] ) )
 
 
 # Implementations needed for the lab
 
 class Sample:
-  def __init__( alpha, point ):
+  def __init__( self, alpha, point ):
     self.alpha = alpha
     self.point = point
 
 
-def kernel( x, y, kind ): # x, y are vectors of ndarray type
-  if x.size == 3:
+def kernel( x, y, kind ): # x, y are tuples
+  if len(x) == 3:
     # chop off the last element of x
     x = x[ 0:2 ]
 
-  if y.size == 3:
+  if len(y) == 3:
     # chop off the last element of y
     y = y[ 0:2 ]
 
@@ -59,7 +61,7 @@ def computePMatrix( dataset, kernelKind ):
 
   for i in range( amountOfPoints ):
     for j in range( amountOfPoints ):
-      P[ i, j ] = dataset[ i ][ 2 ] * dataset[ j ][ 2 ] * kernel( dataset[ i ], dataset[ j ], kernelKind )
+      P[ i, j ] = dataset[0][ i ][ 2 ] * dataset[0][ j ][ 2 ] * kernel( dataset[0][ i ], dataset[0][ j ], kernelKind )
 
   return P
 
@@ -140,10 +142,11 @@ def testMatP():
   print( computePMatrix( L, 0 ) )
 
 def testCallQP():
-  x = np.array( [11,32,-1] )
-  y = np.array( [1,2,1] )
-  L = [ x, y ]
-  P = computePMatrix( L, 0 )
+  dataset = generateData()
+
+  print( dataset )
+
+  P = computePMatrix( dataset, 0 )
 
   print( P )
 
