@@ -100,6 +100,21 @@ def generateData():
   return data, classA, classB
 
 
+def plotEverytthing( classA, classB ):
+  pylab.hold( True )
+
+  pylab.plot( [ p[0] for p in classA ], [ p[1] for p in classA ], 'bo' )
+  pylab.plot( [ p[0] for p in classB ], [ p[1] for p in classB ], 'ro' )
+
+
+  xrange = np.arrange( -4, 4, 0.05 )
+  yrange = np.arrange( -4, 4, 0.05 )
+
+  grid = matrix( [ [ indicator( x, y ) for y in yrange ] for x in xrange ] )
+
+  pylab.contour( xrange, yrange, grid, (-1.0, 0.0, 1.0), colors=('red', 'black', 'blue'), linewidths=(1, 3, 1) )
+
+  pylab.show()
 
 
 # Test for the above implementations
