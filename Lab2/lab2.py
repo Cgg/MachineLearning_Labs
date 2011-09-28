@@ -13,7 +13,8 @@ import numpy as np
 def Lab2( amountOfPoints, kernelKind ):
 
   # generate dataset TODO
-  dataset = generateData()
+  dataset, cA, cB = generateData()
+  print(dataset)
 
   P = computePMatrix( dataset, kernelKind )
 
@@ -25,7 +26,13 @@ def Lab2( amountOfPoints, kernelKind ):
 
   for i in range( len( alpha ) ):
     if alpha[ i ] > 1e-5:
-      points.append( Sample( alpha[ i ], dataset[0][ i ] ) )
+      points.append( Sample( alpha[ i ], dataset[ i ] ) )
+
+  p=[0,0]
+
+  print( indicator( p, points, kernelKind ) )
+
+  plotEverything( points,cA, cB, 0 )
 
 
 # Implementations needed for the lab
@@ -61,7 +68,7 @@ def computePMatrix( dataset, kernelKind ):
 
   for i in range( amountOfPoints ):
     for j in range( amountOfPoints ):
-      P[ i, j ] = dataset[0][ i ][ 2 ] * dataset[0][ j ][ 2 ] * kernel( dataset[0][ i ], dataset[0][ j ], kernelKind )
+      P[ i, j ] = dataset[ i ][ 2 ] * dataset[ j ][ 2 ] * kernel( dataset[ i ], dataset[ j ], kernelKind )
 
   return P
 
@@ -90,6 +97,16 @@ def callToQP( PMatrix ):
   return alpha
 
 
+def indicator( p, vectors, kernelKind ):
+
+  indic = 0
+
+  for i in range( len( vectors ) ):
+    indic = indic + (vectors[i].alpha)*(vectors[i].point[2])*kernel( p, vectors[i].point, kernelKind )
+
+  return indic
+
+
 def generateData():
   classA = [ (random.normalvariate(1.5, 1), random.normalvariate(1.5,1),1.0) for i in range( 10 )]
 
@@ -102,19 +119,19 @@ def generateData():
   return data, classA, classB
 
 
-def plotEverytthing( classA, classB ):
+def plotEverything( vectors,classA, classB, kernelKind ):
   pylab.hold( True )
 
   pylab.plot( [ p[0] for p in classA ], [ p[1] for p in classA ], 'bo' )
   pylab.plot( [ p[0] for p in classB ], [ p[1] for p in classB ], 'ro' )
 
 
-  xrange = np.arrange( -4, 4, 0.05 )
-  yrange = np.arrange( -4, 4, 0.05 )
+  x_range = np.arange( -4, 4, 0.05 )
+  y_range = np.arange( -4, 4, 0.05 )
 
-  grid = matrix( [ [ indicator( x, y ) for y in yrange ] for x in xrange ] )
+  grid = matrix( [ [ indicator( [x,y], vectors, kernelKind ) for y in y_range ] for x in x_range ] )
 
-  pylab.contour( xrange, yrange, grid, (-1.0, 0.0, 1.0), colors=('red', 'black', 'blue'), linewidths=(1, 3, 1) )
+  pylab.contour( x_range, y_range, grid, (-1.0, 0.0, 1.0), colors=('green', 'black', 'yellow'), linewidths=(1, 3, 1) )
 
   pylab.show()
 
