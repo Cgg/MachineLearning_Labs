@@ -89,7 +89,17 @@ def callToQP( PMatrix ):
 
 
 def generateData():
-  print 'todo'
+  classA = [ (random.normalvariate(1.5, 1), random.normalvariate(1.5,1),1.0) for i in range( 10 )]
+
+  classB = [ (random.normalvariate(0.0, 0.5), random.normalvariate(0.0,0.5), -1.0) for i in range( 10 ) ]
+
+  data = classA + classB
+
+  random.shuffle( data )
+
+  return data, classA, classB
+
+
 
 
 # Test for the above implementations
