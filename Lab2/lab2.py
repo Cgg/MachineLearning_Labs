@@ -13,7 +13,7 @@ import numpy as np
 def Lab2( amountOfPoints, kernelKind ):
 
   # generate dataset TODO
-  dataset, cA, cB = generateData()
+  dataset, cA, cB = generateData(amountOfPoints)
   print(dataset)
 
   P = computePMatrix( dataset, kernelKind )
@@ -32,7 +32,7 @@ def Lab2( amountOfPoints, kernelKind ):
 
   print( indicator( p, points, kernelKind ) )
 
-  plotEverything( points,cA, cB, 0 )
+  plotEverything( points,cA, cB, kernelKind )
 
 
 # Implementations needed for the lab
@@ -44,6 +44,11 @@ class Sample:
 
 
 def kernel( x, y, kind ): # x, y are tuples
+  p   = 2
+  sig = 1.0
+  k   = 1.0
+  d   = 0.0
+
   if len(x) == 3:
     # chop off the last element of x
     x = x[ 0:2 ]
@@ -52,8 +57,16 @@ def kernel( x, y, kind ): # x, y are tuples
     # chop off the last element of y
     y = y[ 0:2 ]
 
-  if( kind == 0 ): # linear kernel function
+  if( kind == "l" ): # linear kernel function
     return ( np.dot( x, y ) + 1 )
+  elif( kind == "p" ):
+    return ( np.dot( x, y ) + 1 )**p
+  elif( kind == "r" ): # radial kernel function
+    xMinusY = [ x[0] - y[0], x[1] - y[1] ]
+
+    return( math.exp( - np.dot( xMinusY, xMinusY ) / ( 2 * sig**2  ) ) )
+  elif( kind == "s" ):
+    return (math.tanh( (k * np.dot(x,y) ) - d ) )
   else:
     print 'Not supported yet'
 
@@ -91,6 +104,7 @@ def callToQP( PMatrix ):
   print( G )
 
   # actual call to qp
+  print(PMatrix)
   r = qp( matrix(PMatrix), matrix(q), matrix(G), matrix(h) )
   alpha = list( r['x'] )
 
@@ -107,10 +121,12 @@ def indicator( p, vectors, kernelKind ):
   return indic
 
 
-def generateData():
-  classA = [ (random.normalvariate(1.5, 1), random.normalvariate(1.5,1),1.0) for i in range( 10 )]
+def generateData(pointsAm):
+  classA = [ (random.normalvariate(1.5, 1),\
+    random.normalvariate(1.5,1),1.0) for i in range( pointsAm )]
 
-  classB = [ (random.normalvariate(0.0, 0.5), random.normalvariate(0.0,0.5), -1.0) for i in range( 10 ) ]
+  classB = [ (random.normalvariate(0.0, 0.5),\
+    random.normalvariate(0.0,0.5), -1.0) for i in range( pointsAm ) ]
 
   data = classA + classB
 
@@ -120,6 +136,7 @@ def generateData():
 
 
 def plotEverything( vectors,classA, classB, kernelKind ):
+  pylab.clf()
   pylab.hold( True )
 
   pylab.plot( [ p[0] for p in classA ], [ p[1] for p in classA ], 'bo' )
@@ -131,7 +148,8 @@ def plotEverything( vectors,classA, classB, kernelKind ):
 
   grid = matrix( [ [ indicator( [x,y], vectors, kernelKind ) for y in y_range ] for x in x_range ] )
 
-  pylab.contour( x_range, y_range, grid, (-1.0, 0.0, 1.0), colors=('green', 'black', 'yellow'), linewidths=(1, 3, 1) )
+  pylab.contour( x_range, y_range, grid, (-1.0, 0.0, 1.0), colors=('red',\
+    'black', 'blue'), linewidths=(1, 3, 1) )
 
   pylab.show()
 
@@ -144,7 +162,7 @@ def testKer():
 
   print( x )
   print( y )
-  print( kernel( x, y, 0 ) )
+  print( kernel( x, y, l ) )
 
 def testMatP():
   x = np.array( [1,2,-1] )
