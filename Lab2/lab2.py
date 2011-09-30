@@ -10,7 +10,7 @@ import numpy as np
 
 # Building the hyper plan
 
-def Lab2( amountOfPoints, kernelKind ):
+def Lab2( amountOfPoints, kernelKind, C = None ):
 
   # generate dataset TODO
   dataset, cA, cB = generateData(amountOfPoints)
@@ -18,7 +18,7 @@ def Lab2( amountOfPoints, kernelKind ):
 
   P = computePMatrix( dataset, kernelKind )
 
-  alpha = callToQP( P )
+  alpha = callToQP( P, C )
 
   # point initialization...
 
@@ -45,7 +45,7 @@ class Sample:
 
 def kernel( x, y, kind ): # x, y are tuples
   p   = 2
-  sig = 1.0
+  sig = 0.2
   k   = 1.0
   d   = 0.0
 
@@ -86,27 +86,49 @@ def computePMatrix( dataset, kernelKind ):
   return P
 
 
-def callToQP( PMatrix ):
+def callToQP( PMatrix, C = None ):
   amountOfPoints = PMatrix.shape[0]
 
-  # first build helper matrixes to pass to qp
-  h = np.zeros( ( amountOfPoints, 1 ) )
-  q = np.zeros( ( amountOfPoints, 1 ) )
-  q[::] = -1
+  q = -np.ones( ( amountOfPoints, 1 ) )
 
-  G = np.zeros( ( amountOfPoints, amountOfPoints ) )
+  if C == None or C == 0:
+    # first build helper matrixes to pass to qp
+    h = np.zeros( ( amountOfPoints, 1 ) )
 
-  for i in range( amountOfPoints ):
-    G[ i, i ] = -1
+    G = np.zeros( ( amountOfPoints, amountOfPoints ) )
 
-  print( h )
-  print( q )
-  print( G )
+    for i in range( amountOfPoints ):
+      G[ i, i ] = -1
 
-  # actual call to qp
-  print(PMatrix)
-  r = qp( matrix(PMatrix), matrix(q), matrix(G), matrix(h) )
-  alpha = list( r['x'] )
+    print( h )
+    print( q )
+    print( G )
+
+    # actual call to qp
+    print(PMatrix)
+    r = qp( matrix(PMatrix), matrix(q), matrix(G), matrix(h) )
+    alpha = list( r['x'] )
+
+  else:
+    # first build helper matrixes to pass to qp
+    h = np.zeros( ( (2 * amountOfPoints), 1 ) )
+    for i in range( amountOfPoints ):
+      h[ i + amountOfPoints ] = C
+
+    G = np.zeros( ( (2 * amountOfPoints), amountOfPoints ) )
+
+    for i in range( amountOfPoints ):
+      G[ i, i ] = -1
+      G[ i + amountOfPoints, i ] = 1
+
+    print( h )
+    print( q )
+    print( G )
+
+    # actual call to qp
+    print(PMatrix)
+    r = qp( matrix(PMatrix), matrix(q), matrix(G), matrix(h) )
+    alpha = list( r['x'] )
 
   return alpha
 
