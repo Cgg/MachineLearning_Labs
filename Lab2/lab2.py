@@ -145,10 +145,14 @@ def indicator( p, vectors, kernelKind ):
 
 def generateData(pointsAm):
   classA = [ (random.normalvariate(1.5, 1),\
-    random.normalvariate(1.5,1),1.0) for i in range( pointsAm )]
+    random.normalvariate(1.5,1),1.0) for i in range( pointsAm ) ] +\
+    [(random.normalvariate(-2, 0.5),\
+    random.normalvariate(-2,0.5),1.0) for i in range( pointsAm ) ]
 
   classB = [ (random.normalvariate(0.0, 0.5),\
-    random.normalvariate(0.0,0.5), -1.0) for i in range( pointsAm ) ]
+    random.normalvariate(0.0,0.5), -1.0) for i in range( pointsAm ) ] +\
+    [ (random.normalvariate(3.0, 1),\
+    random.normalvariate(-2.0,1.5), -1.0) for i in range( pointsAm ) ]
 
   data = classA + classB
 
@@ -165,8 +169,8 @@ def plotEverything( vectors,classA, classB, kernelKind ):
   pylab.plot( [ p[0] for p in classB ], [ p[1] for p in classB ], 'ro' )
 
 
-  x_range = np.arange( -4, 4, 0.05 )
-  y_range = np.arange( -4, 4, 0.05 )
+  x_range = np.arange( -4, 5, 0.05 )
+  y_range = np.arange( -5, 4, 0.05 )
 
   grid = matrix( [ [ indicator( [x,y], vectors, kernelKind ) for y in y_range ] for x in x_range ] )
 
