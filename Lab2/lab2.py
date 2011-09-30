@@ -45,9 +45,9 @@ class Sample:
 
 def kernel( x, y, kind ): # x, y are tuples
   p   = 2
-  sig = 0.2
-  k   = 1.0
-  d   = 0.0
+  sig = 1.1
+  k   = 0.5
+  d   = 2.0
 
   if len(x) == 3:
     # chop off the last element of x
@@ -66,7 +66,8 @@ def kernel( x, y, kind ): # x, y are tuples
 
     return( math.exp( - np.dot( xMinusY, xMinusY ) / ( 2 * sig**2  ) ) )
   elif( kind == "s" ):
-    return (math.tanh( (k * np.dot(x,y) ) - d ) )
+    a = (math.tanh( (k * np.dot(x,y) ) + d ) )
+    return a
   else:
     print 'Not supported yet'
 
@@ -184,11 +185,11 @@ def plotEverything( vectors,classA, classB, kernelKind ):
 
 def testKer():
   x = np.array( [1,2,-1] )
-  y = np.array( [1,2,1] )
+  y = np.array( [1,0,1] )
 
   print( x )
   print( y )
-  print( kernel( x, y, l ) )
+  print( kernel( x, y, 's' ) )
 
 def testMatP():
   x = np.array( [1,2,-1] )
