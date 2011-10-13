@@ -108,3 +108,37 @@ mask3D( :, :, 3 ) = mask;
 result_im = uint8( double( book ) .* mask3D );
 figure;
 imagesc( result_im );
+
+%% Assignment 4
+
+T = 6
+[ mu sigma p alpha classes ] = adaboost( test_data, T );
+class = adaboost_discriminant( test_data( :, 1:2 ), mu, sigma, p, ...
+                               alpha, classes, T );
+
+bost_err = 1.0 - sum( class == test_data( :, end ) )/M
+
+figure;
+
+hold on;
+
+plot( data2( :, 1 ), data2( :, 2 ), '.' );
+plot( data1( :, 1 ), data1( :, 2 ), '.r' );
+
+legend( 'Hand holding book', 'Hand' );
+ax = [ 0.2 0.5 0.2 0.45 ];
+axis( ax );
+x = ax( 1 ):0.01:ax( 2 );
+y = ax( 3 ):0.01:ax( 4 );
+
+[ z1 z2 ] = meshgrid( x, y );
+z1 = reshape( z1, size( z1, 1 )*size( z1, 2 ), 1 );
+z2 = reshape( z2, size( z2, 1 )*size( z2, 2 ), 1 );
+
+g = adaboost_discriminant( [ z1 z2 ], mu, sigma, p, alpha, classes, T );
+
+gg = reshape( g, length( y ), length( z ) );
+
+[ c, h ] = contour( x, y, gg, [ 0.5 0.5 ] );
+
+set( h, 'LineWidth', 3 );

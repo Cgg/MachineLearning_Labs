@@ -5,6 +5,8 @@
 % We create the test_data from the saved variables data1t and data2t given
 % at varification_data.mat
 
+load( 'verification_data.mat' );
+
 test_data = [data1t; data2t];
 
 %% Assignment 1 & 2
@@ -22,4 +24,11 @@ class = class -1;
 error_test = 1.0 - sum(class == test_data(:, end)) / M
 
 
+%% Assignments 3 & 4
 
+T = 6
+[ mu sigma p alpha classes ] = adaboost( test_data, T );
+class = adaboost_discriminant( test_data( :, 1:2 ), mu, sigma, p, ...
+                               alpha, classes, T );
+
+bost_err = 1.0 - sum( class == test_data( :, end ) )/M
