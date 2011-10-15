@@ -26,9 +26,9 @@ error_test = 1.0 - sum(class == test_data(:, end)) / M
 
 %% Assignments 3 & 4
 
-T = 6
-[ mu sigma p alpha classes ] = adaboost( test_data, T );
-class = adaboost_discriminant( test_data( :, 1:2 ), mu, sigma, p, ...
+T = 6;
+[ mu sigma p alpha classes ] = adaboost( test_data, T )
+class = adaboost_discriminant( test_data( :, 1:N-1 ), mu, sigma, p, ...
                                alpha, classes, T );
 
 bost_err = 1.0 - sum( class == test_data( :, end ) )/M

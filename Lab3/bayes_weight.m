@@ -31,6 +31,8 @@ function [ mu, sigma ] = bayes_weight( data, w )
 
 M1 = 0;
 M2 = 0;
+M3 = 0;
+M4 = 0;
 mu = zeros(2);
 sum11 = 0;
 sum12 = 0;
@@ -74,18 +76,20 @@ sigma = zeros(2);
 
 for countt = 1:length(data)
     if data(countt, 3) == 0 % Hand class
-        sum_11 = sum_11 + ( w(count)*( data(countt, 1) - mu(1, 1) ) ^ 2 ); 
-        sum_12 = sum_12 + ( w(count)*( data(countt, 2) - mu(1, 2) ) ^ 2 );
+        M3 = M3 + w(countt);
+        sum_11 = sum_11 + (w(countt)*(( data(countt,1) - mu(1, 1) ) ^ 2 )); 
+        sum_12 = sum_12 + (w(countt)*(( data(countt,2) - mu(1, 2) ) ^ 2 ));
     elseif data(countt, 3) == 1 % Book class
-        sum_21 = sum_21 + ( w(count)*( data(countt, 1) - mu(2, 1) ) ^ 2 ); 
-        sum_22 = sum_22 + ( w(count)*( data(countt, 2) - mu(2, 2) ) ^ 2 );
+        M4 = M4 + w(countt);
+        sum_21 = sum_21 + (w(countt)*(( data(countt,1) - mu(2, 1) ) ^ 2 )); 
+        sum_22 = sum_22 + (w(countt)*(( data(countt,2) - mu(2, 2) ) ^ 2 ));
     end
 end
 
-sigma(1, 1) = sqrt( sum_11 / M1 );
-sigma(1, 2) = sqrt( sum_12 / M1 );
-sigma(2, 1) = sqrt( sum_21 / M2 );
-sigma(2, 2) = sqrt( sum_22 / M2 );
+sigma(1, 1) = sqrt( sum_11 / M3 );
+sigma(1, 2) = sqrt( sum_12 / M3 );
+sigma(2, 1) = sqrt( sum_21 / M4 );
+sigma(2, 2) = sqrt( sum_22 / M4 );
 
 
 end
