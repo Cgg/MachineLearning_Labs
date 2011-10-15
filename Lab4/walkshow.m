@@ -23,6 +23,9 @@ function walkshow(states)
     p = [p, im{states(i)}];
   end
 
-  imwrite(p, 'cartoon.png');
-  imshow(p);
+  p=p-min(p(:)); % shift data such that the smallest element of p is 0
+  p=p/max(p(:)); % normalize the shifted data to 1
+
+  imwrite(p,'cartoon.png', 'BitDepth', 16);
+
 end
